@@ -8,8 +8,20 @@ st.markdown(title_text, unsafe_allow_html=True)
 description_text = "<span style='color: #4C4C6D;'>Unleash the Power of Music to Match Your Mood</span>"
 st.markdown(f"<h6>{description_text}</h6>", unsafe_allow_html=True)
 
+
 # Emotion Input
 emotion = st.selectbox("Select your current emotion", ["Happy😍", "Sad🥺", "Angry😤", "Relaxed😊"])
+
+
+
+# Conditionally show camera input when the checkbox is selected
+show_camera = st.button("Take Picture:sunglasses:",use_container_width=True)
+if show_camera:
+    # Capture the picture
+    picture = st.camera_input("")
+
+    if picture:
+        st.image(picture)
 
 
 # Featured Songs/Playlists
