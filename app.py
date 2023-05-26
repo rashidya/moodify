@@ -38,7 +38,7 @@ def home(name):
 
 
     # Conditionally show camera input when the checkbox is selected
-    show_camera = st.button("Take Picture:sunglasses:",use_container_width=True)
+    show_camera = st.button("Take Picture:sunglasses:")
     if show_camera:
         # Capture the picture
         picture = st.camera_input("")
@@ -90,6 +90,7 @@ def home(name):
 
 # Create the login form 
 def login_form(): 
+    
     
     # Initialize session state
     if "button_state" not in st.session_state:
