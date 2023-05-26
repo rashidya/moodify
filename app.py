@@ -1,4 +1,7 @@
 import streamlit as st
+import pandas as pd
+import plotly.express as px
+import streamlit.components.v1 as components
 
 # Display the app name as a title
 title_text = "<h1 style='color: #1B9C85;'>Moodify🎧</h1>"
@@ -24,48 +27,42 @@ if show_camera:
         st.image(picture)
 
 
-# Featured Songs/Playlists
-featured_songs = {
-    "Happy": [
-        {"title": "Song 1", "artist": "Artist 1"},
-        {"title": "Song 2", "artist": "Artist 2"},
-        {"title": "Song 3", "artist": "Artist 3"},
-        {"title": "Song 4", "artist": "Artist 4"},
-        {"title": "Song 5", "artist": "Artist 5"},
-    ],
-    "Sad": [
-        {"title": "Song 6", "artist": "Artist 6"},
-        {"title": "Song 7", "artist": "Artist 7"},
-        {"title": "Song 8", "artist": "Artist 8"},
-        {"title": "Song 9", "artist": "Artist 9"},
-        {"title": "Song 10", "artist": "Artist 10"}
-    ],
-    "Angry": [
-        {"title": "Song 11", "artist": "Artist 11"},
-        {"title": "Song 12", "artist": "Artist 12"},
-        {"title": "Song 13", "artist": "Artist 13"},
-        {"title": "Song 14", "artist": "Artist 14"},
-        {"title": "Song 15", "artist": "Artist 15"}
-    ],
-    "Relaxed": [
-        {"title": "Song 16", "artist": "Artist 16"},
-        {"title": "Song 17", "artist": "Artist 17"},
-        {"title": "Song 18", "artist": "Artist 18"},
-        {"title": "Song 19", "artist": "Artist 19"},
-        {"title": "Song 20", "artist": "Artist 20"}
-    ]
-}
+# Load the dataset into a Pandas DataFrame
+df = pd.read_csv("data/dataset.csv")
 
-# Display featured songs for each emotion
-for emotion, songs in featured_songs.items():
-    st.subheader(emotion)
-    # Create a horizontal scroller container
-    with st.container():
-        # Create columns for song cards
-        cols = st.columns(len(songs))
-        for col, song in zip(cols, songs):
-            with col:
-                # Display song card with additional information
-                st.image("images/song.jpg", use_column_width=True)
-                st.write(f"Title: {song['title']}")
-                st.write(f"Artist: {song['artist']}")
+# Retrieve songs based on genre
+desired_genre = "Pop"  # Replace with the desired genre
+songs_by_genre = df[df["genre"] == desired_genre]
+
+
+# Create an empty list to store the song URLs
+song_urls = []
+
+# Iterate over the songs in the genre
+for index, song in songs_by_genre.iterrows():
+    if index<18042:
+        # Define the Spotify track URI
+        track_uri = song["uri"]
+
+        # Generate the Spotify player embed code
+        spotify_player_code = f"""
+            <iframe src="https://open.spotify.com/embed/track/{track_uri.split(':')[2]}"
+                 width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+            """
+
+        # Add the Spotify player code to the list
+        song_urls.append(spotify_player_code)
+        
+
+num_cols = 2
+num_rows = len(songs_by_genre) // num_cols + 1
+
+# Split the song_urls list into chunks based on the number of columns
+chunks = [song_urls[i:i + num_cols] for i in range(0, len(song_urls), num_cols)]
+
+# Display the song previews in a grid
+for chunk in chunks:
+    col1, col2 = st.columns(num_cols)
+    for i, song_preview in enumerate(chunk):
+        with col1 if i % num_cols == 0 else col2 if i % num_cols == 1 else col3:
+            st.markdown(song_preview, unsafe_allow_html=True)   
