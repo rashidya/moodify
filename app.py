@@ -20,7 +20,9 @@ conn = mysql.connector.connect(
 
 
 # Create the login form 
-def home(): 
+def home(name): 
+
+    st.markdown(f"<h4>Hi {name}</h4>", unsafe_allow_html=True)
     # Display the app name as a title
     title_text = "<h1 style='color: #1B9C85;'>Moodify🎧</h1>"
     st.markdown(title_text, unsafe_allow_html=True)
@@ -88,11 +90,7 @@ def home():
 
 # Create the login form 
 def login_form(): 
-
-    button_a_label = "Log In"
-    button_b_label = "Register"
-    msg="Don\'t have an account?"
-
+    
     # Initialize session state
     if "button_state" not in st.session_state:
         st.session_state.button_state = {"Sign Up": False}
@@ -112,25 +110,19 @@ def login_form():
     st.markdown(title_text, unsafe_allow_html=True)
 
     # Get the username and password from the user 
-    username = st.text_input("Username") 
-    password = st.text_input("Password", type='password') 
+    username = st.text_input("Username",key="username") 
+    password = st.text_input("Password", type='password',key="password") 
  
  
     submit = st.button(button_a_label, use_container_width=True) 
- 
+       
+
     st.write(msg) 
-    # Check if Button B is clicked
     if st.button(button_b_label):
-        if st.session_state.button_state["Sign Up"] :
+         if st.session_state.button_state["Sign Up"] :
             st.session_state.button_state["Sign Up"] = False
-        else :
+         else :
             st.session_state.button_state["Sign Up"] = True
-    else:
-        if st.session_state.button_state["Sign Up"] :
-            st.session_state.button_state["Sign Up"] = False
-        else :
-            st.session_state.button_state["Sign Up"] = True
-    
     cursor = conn.cursor() 
 
     # Check if the login button is clicked 
@@ -145,6 +137,7 @@ def login_form():
             if response : 
                     st.success('Logged in successfully!') 
                     st.session_state.page = "home"
+                    home(response[1])
             else: 
                     st.error('Invalid credentials') 
 
@@ -152,6 +145,5 @@ def login_form():
             cursor.execute('INSERT INTO user (username , password ) VALUES (%s, %s)', (username,password))
             conn.commit()
             st.success('Registered successfully!') 
-            #st.session_state.button_state["Sign Up"] = False
 
 login_form()
