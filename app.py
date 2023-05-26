@@ -39,7 +39,7 @@ song_urls = []
 
 # Iterate over the songs in the genre
 for index, song in songs_by_genre.iterrows():
-    if index<18042:
+    if index<18100:
         # Define the Spotify track URI
         track_uri = song["uri"]
 
