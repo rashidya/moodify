@@ -114,7 +114,7 @@ def login_form():
     password = st.text_input("Password", type='password',key="password") 
  
  
-    submit = st.button(button_a_label, use_container_width=True) 
+    submit = st.button(button_a_label) 
        
 
     st.write(msg) 
