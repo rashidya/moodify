@@ -89,9 +89,13 @@ def home():
 # Create the login form 
 def login_form(): 
 
+    button_a_label = "Log In"
+    button_b_label = "Register"
+    msg="Don\'t have an account?"
+
     # Initialize session state
     if "button_state" not in st.session_state:
-        st.session_state.button_state = {"Log In": "Log In", "Sign Up": False}
+        st.session_state.button_state = {"Sign Up": False}
 
     # Change the label of Button A based on Button B state
     if st.session_state.button_state["Sign Up"]:
